@@ -9,61 +9,58 @@
     <script type="text/javascript" src="js/jquery-1.12.0.min.js"></script>
     <link rel="stylesheet" href="css/materialize.css" />
 </head>
-<body style="background-color:#ef6c00;" background="images/handsbackground.jpg">
+<body style="background-color:#d32f2f;">
 <div class="section no-pad-bot" id="index-banner">
 	<div class="container">
-	  	<h1 class="header center-on-small-only blue-text center">Shuffle</h1>
+	  	<h3 class="header center-on-small-only white-text center">Shuffle</h3>
 	    <div class="row center">
-	        <h4 class ="header col s12 light center blue-text">A funky way to discover music.</h4>
+	        <h6 class ="header col s12 light center white-text">A funky way to discover music.</h6>
 	    </div>
-        <div class="col m6 offset-s6">
+        <div class="col m12 offset-s6">
             <div class="row center offset-s12">
-                <form class="col s6 center offset-s3" id="login">
+                <form class="col s12 center" id="login">
                     <div class="row center">
                         <div class="input-field col s12">
-                            <input id="email" type="email" class="validate" required>
-                            <label for="email" class="blue-text">username</label>
+                            <input id="email" type="email" class="validate" placeholder="email" required style="color:#fff">
                         </div>
                     </div>
                     <div class="row center">
                         <div class="input-field col s12">
-                            <input id="pass" type="password" class="validate" required>
-                            <label for="pass" class="blue-text">password</label>
+                            <input id="pass" type="password" placeholder="*******" class="validate" required style="color:#fff">
                         </div>
                     </div>
                     <div class="row center">
                         <div class="col m12">
-                            <p>
+                            <p class="flow-text">
                             	<a class="btn btn-large waves-effect waves-light" type="button" name="signup" onclick="signUp();">Signup?</a>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                 <button class="btn btn-large waves-effect waves-light right-align" style="float:right;" type="button" name="login">Login</button>
                             </p>
                         </div>
                     </div>
                 </form>
-                <form class="col s6 center offset-s3" id="signup" hidden>
+                <form class="col s12 center" id="signup" hidden>
                     <div class="row center">
                         <div class="input-field col s12">
-                            <input id="email" type="email" class="validate" required>
-                            <label for="email" class="blue-text">full name</label>
+                            <input id="name" type="text" class="validate" placeholder="full name" required style="color:#fff">
                         </div>
                     </div>
                     <div class="row center">
                         <div class="input-field col s12">
-                            <input id="email" type="email" class="validate" required>
-                            <label for="email" class="blue-text">username</label>
+                            <input id="email" type="email" class="validate" placeholder="email" required style="color:#fff">
                         </div>
                     </div>
                     <div class="row center">
                         <div class="input-field col s12">
-                            <input id="pass" type="password" class="validate" required>
-                            <label for="pass" class="blue-text">password</label>
+                            <input id="password" type="password" class="validate" placeholder="*******" required style="color:#fff">
                         </div>
                     </div>
                     <div class="row center">
                         <div class="col m12">
-                            <p>
-                            	<a class="btn btn-large waves-effect waves-light" type="button" name="login" onclick="LogIN();">Login?</a>
-                                <button class="btn btn-large waves-effect waves-light right-align" style="float:right;" type="button" name="login">Signup</button>
+                            <p class="flow-text">
+                            	<a class="btn btn-large  waves-effect waves-light" type="button" name="login" onclick="LogIN();">Login?</a>
+                                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <button class="btn btn-large waves-effect waves-light right-align" align="right" style="float:right;" type="button" name="login">Register</button>
                             </p>
                         </div>
                     </div>

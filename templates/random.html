@@ -48,13 +48,13 @@
 
     <script>
     $(document).ready(function(){
-        $('.your-element').on('swipe', function(event, slick, direction){
+        $('.single-item').on('swipe', function(event, slick, direction){
           console.log(direction);
         });
         $('.single-item').slick({
           mobileFirst: true,
-          prevArrow: true,
-          nextArrow: true,
+          arrows: true,
+          accessibility: true,
           cssEase: 'linear'
       });
       $(".button-collapse").sideNav();
