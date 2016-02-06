@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, redirect, render_template
+from flask import Flask, flash, request, jsonify, redirect, render_template
 from flask_restful import Resource, Api
 from pymongo import MongoClient
 from flask import send_file
@@ -6,13 +6,19 @@ from flask.ext.httpauth import HTTPBasicAuth
 import soundcloud
 from key import client_id
 from pprint import pprint
-
+from flask_login import LoginManager, login_user, login_required, logout_user
 
 app = Flask(__name__)
 api = Api(app)
 
-# implement after working :)
-# auth = HTTPBasicAuth()
+# for session management
+login_manager = LoginManager()
+login_manager.init_app(app)
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.get(user_id)
+
 
 mongoclient = MongoClient('mongodb://localhost:27017/')
 sinder = mongoclient.sinder
@@ -24,10 +30,28 @@ client = soundcloud.Client(client_id=client_id)
 class User():
     username = ""
     password = ""
+    is_auth = False
 
     def __init__(self, username, password):
         self.username = username
         self.password = password
+        self.is_auth = False
+
+    @classmethod
+    def get(cls, id):
+        return sinder.userdb.find_one({'_id': id})
+
+    def get_id(self):
+        return unicode(sinder.userdb.find_one({'username': self.username}))
+
+    def is_anonymous(self):
+        return False
+
+    def is_active(self):
+        return True
+
+    def is_authenticated(self):
+        return self.is_auth
 
 
 @app.route('/', methods=['GET'])
@@ -59,7 +83,6 @@ def rate_track():
 
 
 @app.route('/api/track/', methods=['GET'])
-# @auth.login_required
 def get_track(track):
     """
     get track info from mongo storage for particular use
@@ -83,7 +106,16 @@ def new_user():
 
     user = User(username=username, password=password)
     sinder.userdb.insert_one(user.__dict__)
+    flash("User Registered!")
+    user.is_auth = True
+    login_user(user)
     return jsonify({'username': user.username, 'done': True}), 200
+
+
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
 
 
 @app.route('/', methods=['POST'])
@@ -98,10 +130,14 @@ def user_login():
     else:
         if check_user['username'] == username and check_user['password'] == password:
             # login successful
+            login_user(User(username, password))
+            flash("Login Successful!")
             return redirect('/swipe')
-            return jsonify({'status': 'Login successful'}), 200
         else:
+            # TODO Add reader for these message on main html pages !!
+            flash("Invalid Credentials")
             return jsonify({'status': 'Invalid Credentials'}), 201
+
 
 def get_track_details(track_no):
     """
