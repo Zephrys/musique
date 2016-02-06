@@ -13,8 +13,8 @@
     <link rel="stylesheet" type="text/css" href="css/materialize.min.css"/>
     <script type="text/javascript" src="js/materialize.min.js"></script>
 </head>
-  <body style="background-color: #ef5350;">
-    <nav>
+  <body style="background-color: #ef5350;" color="#fff;">
+<nav>
     <div class="nav-wrapper">
       <a href="#!" class="brand-logo">Shuffle</a>
       <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
@@ -24,35 +24,33 @@
         <li><a href="/">Logout</a></li>
       </ul>
     </div>
-  </nav>
+</nav>
+<p class="flow-text" align="center" id="songname">Karma Police</p>
 
-  <div class="container" style="position: fixed;
-top: 125;
-left: 37;
-height: 100%;
-width:100%;">
+<div class="container" style="position: relative;height: 300;width:100%;">
     <div class="row center">
-      <div class="single-item" style="width: 350px; height: 350px;">
+      <div class="single-item" align="center">
         <div><img class="responsive offset-s2" align="center"  width="300" height="300" src="http://i1.sndcdn.com/artworks-000025801802-1msl1i-t300x300.jpg?5e64f12"></div>
         <div><img class="responsive"  width="300" align="center" height="300" src="http://i1.sndcdn.com/artworks-000025801802-1msl1i-t300x300.jpg?5e64f12"></div>
         <div><img class="responsive"  width="300" height="300" src="http://i1.sndcdn.com/artworks-000025801802-1msl1i-t300x300.jpg?5e64f12"></div>
       </div>
   </div>
 </div>
-<p class="flow-text" align="center" id="songname">Karma Police</p>
-<div class="row" style="position: fixed; bottom: -475; left:110;height: 100%; width:100%;">
+<p class="flow-text" align="center" id="bandname" style="padding: 0 0;">Radiohead</p>
+<div class="row" align='center'>
     <a class="btn-floating red btn-large" style="float: center"><i class="material-icons">thumb_down</i></a>
     &nbsp;
     &nbsp;
     &nbsp;
     &nbsp;
     <a class="btn-floating green btn-large" style="float: center"><i class="material-icons">thumb_up</i></a>
-<p class="flow-text" align="center" id="albumname">Pandoras Box</p>
-
 </div>
 
     <script>
     $(document).ready(function(){
+        $('.your-element').on('swipe', function(event, slick, direction){
+          console.log(direction);
+        });
         $('.single-item').slick({
           mobileFirst: true,
           prevArrow: true,
