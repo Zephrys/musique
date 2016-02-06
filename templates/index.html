@@ -8,6 +8,14 @@
     <link rel="shortcut icon" href="images/favicon.png" />
     <script type="text/javascript" src="{{ url_for('static', filename='js/jquery-1.12.0.min.js')}}"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/materialize.css')}}"/>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/notify.js')}}"></script>
+
+{#    <script type=text/javascript>#}
+{#    $SCRIPT_ROOT = {{  }}localhost#}
+{#    </script>#}
+
+
+
 </head>
 <body style="background-color:#d32f2f;">
 <div class="section no-pad-bot" id="index-banner">
@@ -18,7 +26,7 @@
 	    </div>
         <div class="col m12 offset-s6">
             <div class="row center offset-s12">
-                <form class="col s12 center" id="login">
+                <form class="col s12 center" id="login" role="form" method="post" action="/login">
                     <div class="row center">
                         <div class="input-field col s12">
                             <input id="email" type="email" class="validate" placeholder="email" required style="color:#fff">
@@ -34,12 +42,12 @@
                             <p class="flow-text">
                             	<a class="btn btn-large waves-effect waves-light" type="button" name="signup" onclick="signUp();">Signup?</a>
                                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                <button class="btn btn-large waves-effect waves-light right-align" style="float:right;" type="button" name="login">Login</button>
+                                <button class="btn btn-large waves-effect waves-light right-align" style="float:right;" type="loginbutton" name="login">Login</button>
                             </p>
                         </div>
                     </div>
                 </form>
-                <form class="col s12 center" id="signup" hidden>
+                <form class="col s12 center" id="signup" hidden action="/register" method="post">
                     <div class="row center">
                         <div class="input-field col s12">
                             <input id="name" type="text" class="validate" placeholder="full name" required style="color:#fff">
@@ -60,7 +68,7 @@
                             <p class="flow-text">
                             	<a class="btn btn-large  waves-effect waves-light" type="button" name="login" onclick="LogIN();">Login?</a>
                                                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                <button class="btn btn-large waves-effect waves-light right-align" align="right" style="float:right;" type="button" name="login">Register</button>
+                                <button class="btn btn-large waves-effect waves-light right-align" align="right" style="float:right;" id="registerbutton" type="button" name="login">Register</button>
                             </p>
                         </div>
                     </div>
@@ -72,7 +80,53 @@
 	</div>
 </div>
 </body>
+
 <script>
+
+    $('#loginbutton').click(function() {
+        var user = $('#email').val();
+        var password = $('#password').val();
+
+        $.ajax({
+            url: '/login',
+            data: $('form').serialize(),
+            type: 'POST',
+            success: function (response) {
+                $.notify("Login granted", "success");
+                console.log(response);
+            },
+            error: function (response) {
+                $.notify(response.error_msg, "error");
+                console.log(response);
+            }
+        });
+    });
+
+    $('#registerbutton').click(function() {
+        var user = $('#email').val();
+        var password = $('#password').val();
+
+        $.ajax({
+            url: '/register',
+            data: $('form').serialize(),
+            type: 'POST',
+            success: function (response) {
+                if(response.status == 0) {
+                    $.notify(response.error, "error");
+                }
+                else {
+                    $.notify("Login granted", "success");
+                    window.location = '/swipe'
+                }
+                console.log(response);
+            },
+            error: function (response) {
+                $.notify(response.error_msg, "error");
+                console.log(response);
+            }
+        });
+    });
+
 function signUp(){
 	document.getElementById("signup").hidden = false;
 	document.getElementById("login").hidden = true;
