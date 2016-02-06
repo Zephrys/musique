@@ -16,51 +16,27 @@
   <body style="background-color: #ef5350;" color="#fff;">
 		<nav>
 		    <div class="nav-wrapper">
-		      <a href="#!" class="brand-logo">Shuffle</a>
+		      <a href="#!" class="brand-logo">Musique&nbsp;&nbsp;{{g.user.username}}</a>
 		      <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
 		      <ul class="side-nav" id="mobile-demo">
-		        <li><a href="playlist.html">Playlist</a></li>
-		        <li><a href="random.html">Tinder</a></li>
-		        <li><a href="/">Logout</a></li>
+		        <li><a href="/playlist">Playlist</a></li>
+		        <li><a href="/random">Shuffle</a></li>
+		        <li><a href="/logout">Logout</a></li>
 		      </ul>
 		    </div>
 		</nav>
 
   	<div class="container">
 <ul class="collection">
+	{% for song in songs %}
     <li class="collection-item avatar">
-      <img src="images/yuna.jpg" alt="" class="circle">
-      <span class="title">Title</span>
-      <p>First Line <br>
-         Second Line
-      </p>
-      <a href="#!" class="secondary-content"><i class="material-icons">grade</i></a>
+      <img src="{{song.band}}" alt="" class="circle">
+      <span class="title">{{song.title}}</span>
+      <p>{{song.bandname}}</p>
+       <a href="#!" class="secondary-content" onclick="javascript: $('#music').src='{{song.stream_url}}'"><i class="material-icons">play_arrow</i></a>
     </li>
-    <li class="collection-item avatar">
-      <i class="material-icons circle">folder</i>
-      <span class="title">Title</span>
-      <p>First Line <br>
-         Second Line
-      </p>
-      <a href="#!" class="secondary-content"><i class="material-icons">grade</i></a>
-    </li>
-    <li class="collection-item avatar">
-      <i class="material-icons circle green">insert_chart</i>
-      <span class="title">Title</span>
-      <p>First Line <br>
-         Second Line
-      </p>
-      <a href="#!" class="secondary-content"><i class="material-icons">grade</i></a>
-    </li>
-    <li class="collection-item avatar">
-      <i class="material-icons circle red">play_arrow</i>
-      <span class="title">Title</span>
-      <p>First Line <br>
-         Second Line
-      </p>
-      <a href="#!" class="secondary-content"><i class="material-icons">grade</i></a>
-    </li>
-  </ul>
+    {% endfor %}
+</ul>
 	</div>
   <audio controls hidden autoplay='true'><source src="" type="audio/ogg" id='music'></audio>
       <script>
