@@ -7,6 +7,7 @@ import soundcloud
 from key import client_id
 from pprint import pprint
 from flask_login import LoginManager, login_user, login_required, logout_user
+import json
 
 app = Flask(__name__)
 api = Api(app)
@@ -96,7 +97,7 @@ def get_track(track):
     return jsonify(get_track_details(track)), 200
 
 
-@app.route('/newuser/', methods = ['POST'])
+@app.route('/register', methods=['POST'])
 def new_user():
     username = request.form.get('username')
     password = request.form.get('password')
@@ -118,25 +119,29 @@ def logout():
     logout_user()
 
 
-@app.route('/', methods=['POST'])
+@app.route('/login', methods=['POST'])
 def user_login():
+    print request
     username = request.form.get('username')
     password = request.form.get('password')
 
-    check_user = sinder.userdb.find({'username': username})[0]
+    check_user = sinder.userdb.find({'username': username})
 
     if check_user.count() <= 0:
-        return jsonify({'error': 'User doesn\'t exist :( '}), 401
+        return redirect('/')
+        return json.dumps(dict(success=0, error_msg="User doesn't exists"))
     else:
         if check_user['username'] == username and check_user['password'] == password:
             # login successful
             login_user(User(username, password))
             flash("Login Successful!")
             return redirect('/swipe')
+            return jsonify(status=1)
         else:
             # TODO Add reader for these message on main html pages !!
             flash("Invalid Credentials")
-            return jsonify({'status': 'Invalid Credentials'}), 201
+            return redirect('/')
+            return jsonify(status=0, error_msg="Invalid Credentials")
 
 
 def get_track_details(track_no):
@@ -154,13 +159,15 @@ def get_track_details(track_no):
     user = track.user
 
     ret = {
+        'track_no': track_no,
         'stream_url': stream_url,
         'artwork_url': artwork_url or 'http://i.imgur.com/bLrm4qD.jpg?1',
-        'artists': user['username'],
+        'artist': user['username'],
         'title': title,
     }
     pprint(ret)
     return ret
 
 if __name__ == '__main__':
+    app.secret_key = 'shuffle bro kaam kar jae bas'
     app.run(debug=True)
