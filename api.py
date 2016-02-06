@@ -61,7 +61,7 @@ def see():
 
 @app.route('/swipe/')
 def swipe():
-    return render_template('swipe.html', title='swipe page')
+    return render_template('random.html', title='swipe page')
 
 
 @app.route('/api/')
