@@ -1,48 +1,66 @@
 <html>
   <head>
-    <title>Shuffle</title>
+    <title>Musique</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
     <meta keywords = "music, tinder, shuffle, discover, reccomend music">
     <link rel="shortcut icon" href="images/favicon.png" />
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <script type="text/javascript" src="js/jquery-1.12.0.min.js"></script>
-    <link rel="stylesheet" href="css/materialize.css" />
-    <link rel="stylesheet" type="text/css" href="slick/slick.css"/>
-    <link rel="stylesheet" type="text/css" href="slick/slick-theme.css"/>
-    <link rel="stylesheet" type="text/css" href="css/materialize.min.css"/>
-    <script type="text/javascript" src="js/materialize.min.js"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/jquery-1.12.0.min.js')}}"></script>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename= 'css/materialize.min.css')}}"/>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/materialize.min.js') }}"></script>
 </head>
   <body style="background-color: #ef5350;" color="#fff;">
 		<nav>
-		    <div class="nav-wrapper">
-		      <a href="#!" class="brand-logo">Musique&nbsp;&nbsp;{{g.user.username}}</a>
-		      <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
-		      <ul class="side-nav" id="mobile-demo">
-		        <li><a href="/playlist">Playlist</a></li>
-		        <li><a href="/swipe">Shuffle</a></li>
-		        <li><a href="/logout">Logout</a></li>
-		      </ul>
-		    </div>
-		</nav>
+    <div class="nav-wrapper">
+      <a href="#!" class="brand-logo">Musique&nbsp;&nbsp;{{g.user.username}}</a>
+      <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
+      <ul class="right hide-on-med-and-down">
+        <li><a href="/swipe/">Shuffle</a></li>
+        <li><a href="/playlist/">Playlist</a></li>
+        <li><a href="/logout/">Logout</a></li>
+        <li><a target="_blank" href="https://soundcloud.com">Powered By SoundCloud and Azure</a></li>
+      </ul>
+      <ul class="side-nav" id="mobile-demo">
+        <li><a href="/playlist">Playlist</a></li>
+        <li><a href="/swipe">Shuffle</a></li>
+        <li><a href="/logout">Logout</a></li>
+        <li><a target="_blank" href="https://soundcloud.com">Powered By SoundCloud and Azure</a></li>
+      </ul>
+    </div>
+    </nav>
 
   	<div class="container">
 <ul class="collection">
-	{% for song in songs %}
+	{% for song in list_songs %}
     <li class="collection-item avatar">
-      <img src="{{song.band}}" alt="" class="circle">
+      <img src={{song.artwork_url}} alt="" class="circle">
       <span class="title">{{song.title}}</span>
-      <p>{{song.bandname}}</p>
-       <a href="#!" class="secondary-content" onclick="javascript: $('#music').src='{{song.stream_url}}'"><i class="material-icons">play_arrow</i></a>
+      <p>{{song.artist}}</p>
+       <a href="#!" class="secondary-content" onclick='getSong({{song.track_no}})'><i class="material-icons">play_arrow</i></a>
     </li>
     {% endfor %}
 </ul>
 	</div>
-  <audio controls hidden autoplay='true'><source src="" type="audio/ogg" id='music'></audio>
+  <audio controls hidden autoplay='true' id='player'><source src="" type="audio/ogg" id='music'></audio>
       <script>
     $(document).ready(function(){
       $(".button-collapse").sideNav();
     });
+  </script>
+
+  <script>
+    var loc = "http://localhost:5000";
+    function getSong(track_no){
+      $.getJSON(loc + '/getTrack', {
+          track_no: track_no
+          }, function(data) {
+          $("#music").attr("src", data.stream_url);
+          var audio = document.getElementById('player');
+          audio.load();
+          audio.play();
+      });
+    }
   </script>
 
   </body>

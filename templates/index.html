@@ -29,12 +29,12 @@
                 <form class="col s12 center" id="login" role="form" method="post" action="/login">
                     <div class="row center">
                         <div class="input-field col s12">
-                            <input id="email" type="email" class="validate" placeholder="email" required style="color:#fff">
+                            <input id="email" name="username" type="email" class="validate" placeholder="email" required style="color:#fff">
                         </div>
                     </div>
                     <div class="row center">
                         <div class="input-field col s12">
-                            <input id="pass" type="password" placeholder="*******" class="validate" required style="color:#fff">
+                            <input id="pass" name="password" type="password" placeholder="*******" class="validate" required style="color:#fff">
                         </div>
                     </div>
                     <div class="row center">
@@ -55,12 +55,12 @@
                     </div>
                     <div class="row center">
                         <div class="input-field col s12">
-                            <input id="email" type="email" class="validate" placeholder="email" required style="color:#fff">
+                            <input id="email" type="email" class="validate" placeholder="email" name="signup_username" required style="color:#fff">
                         </div>
                     </div>
                     <div class="row center">
                         <div class="input-field col s12">
-                            <input id="password" type="password" class="validate" placeholder="*******" required style="color:#fff">
+                            <input id="password" type="password"  name="signup_password"   class="validate" placeholder="*******" required style="color:#fff">
                         </div>
                     </div>
                     <div class="row center">
@@ -84,8 +84,8 @@
 <script>
 
     $('#loginbutton').click(function() {
-        var user = $('#email').val();
-        var password = $('#password').val();
+        var username = $('username').val();
+        var password = $('password').val();
 
         $.ajax({
             url: '/login',
@@ -103,8 +103,8 @@
     });
 
     $('#registerbutton').click(function() {
-        var user = $('#email').val();
-        var password = $('#password').val();
+        var username = $('signup_username').val();
+        var password= $('signup_password').val();
 
         $.ajax({
             url: '/register',
