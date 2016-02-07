@@ -3,7 +3,7 @@
     <title>Shuffle</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-    <meta keywords = "music, tinder, shuffle, discover, reccomend music">
+    <meta keywords = "music, tinder, shuffle, discover, recommend music">
     <link rel="shortcut icon" href="images/favicon.png" />
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <script type="text/javascript" src="{{ url_for('static', filename='js/jquery-1.12.0.min.js')}}"></script>
@@ -21,21 +21,21 @@
       <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
       <ul class="side-nav" id="mobile-demo">
         <li><a href="/playlist">Playlist</a></li>
-        <li><a href="/random">Shuffle</a></li>
+        <li><a href="/swipe">Shuffle</a></li>
         <li><a href="/logout">Logout</a></li>
       </ul>
     </div>
 </nav>
-<p class="flow-text" align="center" id="songname">Karma Police</p>
+<p class="flow-text" align="center" id="songname">{{ song_dict.title }}</p>
 
 <div class="container" style="position: relative;height: 300;width:100%;">
     <div class="row center">
       <div class="single-item" align="center">
-        <div><img class="responsive offset-s2" align="center"  width="300" height="300" src="http://i1.sndcdn.com/artworks-000025801802-1msl1i-t300x300.jpg?5e64f12" id="image"></div>
+        <div><img class="responsive offset-s2" align="center"  width="300" height="300" src="{{ song_dict.artwork_url }}" id="image"></div>
       </div>
   </div>
 </div>
-<p class="flow-text" align="center" id="bandname" style="padding: 0 0;">Radiohead</p>
+<p class="flow-text" align="center" id="bandname" style="padding: 0 0;">{{ song_dict.artist }}</p>
 <div class="row" align='center'>
     <a class="btn-floating red btn-large" style="float: center" id='thumbsdown'><i class="material-icons">thumb_down</i></a>
     &nbsp;
@@ -44,7 +44,7 @@
     &nbsp;
     <a class="btn-floating green btn-large" style="float: center" id='thumbsup'><i class="material-icons">thumb_up</i></a>
 </div>
-<div id="track" hidden></div>
+<div id="track" hidden>{{ song_dict.track_no }}</div>
 
     <script>
     $(document).ready(function(){
@@ -95,6 +95,6 @@
   </script>
   <script type="text/javascript" src="{{ url_for('static', filename='js/jquery-migrate-1.2.1.min.js')}}"></script>
   <script type="text/javascript" src="{{ url_for('static', filename='slick/slick.min.js') }}"></script>
-  <audio controls hidden autoplay='true'><source src="" type="audio/ogg" id='music'></audio>
+  <audio controls hidden autoplay='true'><source src="{{ song_dict.stream_url }}" type="audio/ogg" id='music'></audio>
   </body>
 </html>

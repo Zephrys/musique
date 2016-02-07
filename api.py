@@ -1,4 +1,4 @@
-from flask import Flask, flash, request, jsonify, redirect, render_template
+from flask import Flask, g, flash, request, jsonify, redirect, render_template
 from flask_restful import Resource, Api
 from pymongo import MongoClient
 from flask import send_file
@@ -6,8 +6,9 @@ from flask.ext.httpauth import HTTPBasicAuth
 import soundcloud
 from key import client_id
 from pprint import pprint
-from flask_login import LoginManager, login_user, login_required, logout_user
+from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 import json
+from get_from_azure import get_from_azure
 
 app = Flask(__name__)
 api = Api(app)
@@ -16,9 +17,10 @@ api = Api(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
 
+
 @login_manager.user_loader
-def load_user(user_id):
-    return User.get(user_id)
+def load_user(username):
+    return User.get(username)
 
 
 mongoclient = MongoClient('mongodb://localhost:27017/')
@@ -27,8 +29,13 @@ sinder = mongoclient.sinder
 # create a client object with your app credentials
 client = soundcloud.Client(client_id=client_id)
 
+@app.before_request
+def before_request():
+    g.user = current_user
+
 
 class User():
+    
     username = ""
     password = ""
     is_auth = False
@@ -40,10 +47,10 @@ class User():
 
     @classmethod
     def get(cls, id):
-        return sinder.userdb.find_one({'_id': id})
+        return sinder.userdb.find_one({'username': id})
 
     def get_id(self):
-        return unicode(sinder.userdb.find_one({'username': self.username}))
+        return unicode(sinder.userdb.find_one({'username': self.username})['username'])
 
     def is_anonymous(self):
         return False
@@ -62,7 +69,8 @@ def see():
 
 @app.route('/swipe/')
 def swipe():
-    return render_template('random.html', title='swipe page')
+
+    return render_template('random.html', song_dict=get_track())
 
 
 @app.route('/api/')
@@ -70,7 +78,7 @@ def get():
     return jsonify({'Yo': 'We are here! :D'}), 200
 
 
-@app.route('/api/track/', methods=['GET'])
+@app.route('/track/', methods=['GET'])
 def rate_track():
     """
     :return: save info for user and track and calls get track for next track
@@ -83,18 +91,26 @@ def rate_track():
     get_track()
 
 
-@app.route('/api/track/', methods=['GET'])
-def get_track(track):
+@app.route('/track/', methods=['GET'])
+@login_required
+def get_track():
     """
-    get track info from mongo storage for particular use
+    get track info from azure recommendation engine for particular user
     """
-    username = request.args['username']
+    userid = g.user.get_id()
 
-    # get user track from mongo
+    # c = sinder.queue.find({'userid': userid, 'status': 'yes'})
+    # if c.count() > 0:
+    #     c[0].update()
 
-    track = get_next_suggestion(username)
+    print userid
+    tracks = get_from_azure(str(userid))[0]
 
-    return jsonify(get_track_details(track)), 200
+    # for track in tracks:
+    # return jsonify(get_track_details(tracks)), 200
+
+    pprint(tracks)
+    return get_track_details(tracks)
 
 
 @app.route('/register', methods=['POST'])
@@ -131,9 +147,11 @@ def user_login():
         return redirect('/')
         return json.dumps(dict(success=0, error_msg="User doesn't exists"))
     else:
+        check_user = check_user[0]
         if check_user['username'] == username and check_user['password'] == password:
             # login successful
-            login_user(User(username, password))
+            user = User(_id= check_user['_id'], username=username, password=password)
+            login_user(user)
             flash("Login Successful!")
             return redirect('/swipe')
             return jsonify(status=1)
@@ -158,10 +176,13 @@ def get_track_details(track_no):
     title = track.title
     user = track.user
 
+    if artwork_url == 'None':
+        artwork_url = 'http://i.imgur.com/bLrm4qD.jpg?1'
+
     ret = {
-        'track_no': track_no,
-        'stream_url': stream_url,
-        'artwork_url': artwork_url or 'http://i.imgur.com/bLrm4qD.jpg?1',
+        'track_no': str(track_no),
+        'stream_url': stream_url.location,
+        'artwork_url': artwork_url,
         'artist': user['username'],
         'title': title,
     }
