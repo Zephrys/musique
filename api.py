@@ -181,7 +181,7 @@ def get_track_details(username=""):
     except:
         # reaching here implies that get track points to a bad url,
         # such songs must be removed from everywhere
-        sinder.removesongs.add({'track_no': track_no})
+        sinder.removesongs.insert_one({'track_no': track_no})
         return get_track_details(username)
 
     # get the tracks streaming URL
@@ -275,4 +275,4 @@ app.secret_key = 'shuffle bro kaam kar jae bas'
 
 
 
-    
+
