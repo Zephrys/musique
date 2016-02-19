@@ -141,7 +141,8 @@ def get_track(username):
 
 def get_track_details(username=""):
     """
-    :param track_no: track number as on sound cloud
+    :param username: bit of a hack in username
+    XXX(psdh) Figure out how do usernames work across AJAX requests
     :return: fetch and return image, stream url, artist info from sound cloud
     """
 
@@ -175,7 +176,13 @@ def get_track_details(username=""):
         sinder.songsdb.update({'track_no': track_no, 'username': userid}, {'track_no': track_no, 'username': userid, 'heard': 1})
 
     # fetch track to stream
-    track = client.get('/tracks/' + str(track_no))
+    try:
+        track = client.get('/tracks/' + str(track_no))
+    except:
+        # reaching here implies that get track points to a bad url,
+        # such songs must be removed from everywhere
+        sinder.removesongs.add({'track_no': track_no})
+        return get_track_details(username)
 
     # get the tracks streaming URL
     stream_url = client.get(track.stream_url, allow_redirects=False)
