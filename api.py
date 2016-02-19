@@ -2,7 +2,7 @@ from flask import Flask, g, flash, request, jsonify, redirect, render_template
 from flask_restful import Resource, Api
 from pymongo import MongoClient
 from flask import send_file
-from flask.ext.httpauth import HTTPBasicAuth
+
 import soundcloud
 from key import client_id
 from pprint import pprint
@@ -271,7 +271,8 @@ def sumchar(s):
         ret += ord(ch)
 
     return ret
+app.secret_key = 'shuffle bro kaam kar jae bas'
 
-if __name__ == '__main__':
-    app.secret_key = 'shuffle bro kaam kar jae bas'
-    app.run(debug=True)
+
+
+    
